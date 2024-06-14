@@ -1,20 +1,26 @@
+// Auteur: AlexChulo
+// Bronnen: 
+// - https://brightspace.avans.nl/
+// - Arduino Ultrasonic Motion Sensor: Motion Sensor and LED project - YouTube
+// - ChatGPT
+
 #include <Servo.h> // Servo bibliotheek voor aansturing van de servomotor
 
 // Initialisatie van de servo en pinnen
 Servo myServo;
 const int trigPin = 12; // Pin voor trig van de ultrasone sensor
 const int echoPin = 13; // Pin voor echo van de ultrasone sensor
-const int servoPin = 6;   // Pin voor servomotor
+const int servoPin = 6; // Pin voor servomotor
 
 /**
  * @brief Setup functie om de pinnen en servo te configureren
  */
 void setup() {
-  Serial.begin(9600);      // Initialiseer seriële communicatie
+  Serial.begin(9600); // Initialiseer seriële communicatie
   pinMode(trigPin, OUTPUT); // Zet trig pin als output
-  pinMode(echoPin, INPUT);  // Zet echo pin als input
-  myServo.attach(servoPin);   // Verbind de servo met pin 
-  myServo.write(0);           // Zet servo op startpositie 0 graden
+  pinMode(echoPin, INPUT); // Zet echo pin als input
+  myServo.attach(servoPin); // Verbind de servo met pin 6
+  myServo.write(0); // Zet servo op startpositie 0 graden
 }
 
 /**

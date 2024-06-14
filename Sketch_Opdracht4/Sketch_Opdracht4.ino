@@ -1,3 +1,8 @@
+// Auteur: AlexChulo
+// Bronnen: 
+// - https://brightspace.avans.nl/
+// - 4# How to Code Potentiometers (Complete Guide) - MIDI Programming for the Arduino (youtube.com)
+
 int ledPins[] = {11, 10, 9, 6, 5, 3}; // Array voor pinnnen LED's
 int potState = 0; // Variabele voor de staat van de potentiometer
 int potPin = A0; // Gebruikte pin voor potentiometer

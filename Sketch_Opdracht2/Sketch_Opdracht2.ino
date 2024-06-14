@@ -1,3 +1,5 @@
+// Auteur: AlexChulo
+// Bron: https://brightspace.avans.nl/
 // Definieer een array van pinnen voor de LEDs
 int ledPins[] = {13, 10, 9, 8, 7, 6, 5, 4};
 

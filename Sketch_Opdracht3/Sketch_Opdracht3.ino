@@ -1,3 +1,8 @@
+// Auteur: AlexChulo
+// Bronnen: 
+// - https://brightspace.avans.nl/
+// - 3# How to Code Buttons (Complete Guide) - MIDI Programming for the Arduino (youtube.com)
+
 // Definitie van pinnen voor de button en de LEDs
 const int buttonPin = 8;  // Pin toewijzing voor de drukknop
 const int ledPin1 = 11;   // Pin toewijzing voor LED 1
