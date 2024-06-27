@@ -12,6 +12,9 @@ const int trigPin = 12; // Pin voor trig van de ultrasone sensor
 const int echoPin = 13; // Pin voor echo van de ultrasone sensor
 const int servoPin = 6; // Pin voor servomotor
 
+// Functieprototypen
+long measureDistance();
+
 /**
  * @brief Setup functie om de pinnen en servo te configureren
  */
@@ -28,21 +31,7 @@ void setup() {
  *        Meet de afstand en beweegt de servo
  */
 void loop() {
-  long duration;
-  int distance;
-
-  // Ultrasoon puls sturen
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  // Pulsduur lezen
-  duration = pulseIn(echoPin, HIGH);
-
-  // Berekening van afstand (in cm)
-  distance = duration * 0.034 / 2;
+  long distance = measureDistance();
 
   // Debugging informatie naar de serial monitor sturen
   Serial.print("Afstand: ");
@@ -59,4 +48,28 @@ void loop() {
   }
 
   delay(100); // Kleine vertraging om te voorkomen dat de sensor te vaak leest
+}
+
+/**
+ * @brief Functie om de afstand te meten met de ultrasone sensor
+ * @return De gemeten afstand in centimeters
+ */
+long measureDistance() {
+  long duration;
+  int distance;
+
+  // Ultrasoon puls sturen
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Pulsduur lezen
+  duration = pulseIn(echoPin, HIGH);
+
+  // Berekening van afstand (in cm)
+  distance = duration * 0.034 / 2;
+  
+  return distance;
 }

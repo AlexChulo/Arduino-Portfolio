@@ -14,7 +14,7 @@ const int servoPin = 9;   // Pin voor servomotor
 
 unsigned long lastDebounceTime1 = 0;  // De laatste tijd dat de output pin veranderde voor drukknop 1
 unsigned long lastDebounceTime2 = 0;  // De laatste tijd dat de output pin veranderde voor drukknop 2
-unsigned long debounceDelay = 50;    // De debounce tijd; vergroot als de schakelaar minder gevoelig is
+const unsigned long debounceDelay = 50; // De debounce tijd; vergroot als de schakelaar minder gevoelig is
 
 bool lastButton1State = LOW;
 bool lastButton2State = LOW;
@@ -24,6 +24,7 @@ bool actionTaken = false; // Vlag om ervoor te zorgen dat actie slechts eenmaal 
 
 // Functieprototypen
 void servoMotion(int upTime, int waitTime, int downTime, int button1, int button2 = -1);
+void debounceButtons();
 
 /**
  * @brief Setup functie om de pinnen en servo te configureren
@@ -42,6 +43,33 @@ void setup() {
  *        Controleert de status van de drukknoppen en roept servoMotion aan
  */
 void loop() {
+  debounceButtons();
+
+  // Controleer de status van de knoppen en roep servoMotion aan
+  if (button1State && button2State && !actionTaken) {
+    Serial.println("Beide knoppen ingedrukt: 3s omhoog, 5s wachten, 0.5s omlaag.");
+    servoMotion(3000, 5000, 500, button1Pin, button2Pin); // Beide knoppen ingedrukt: 3s omhoog, 5s wachten, 0.5s omlaag
+    actionTaken = true; // Markeer de actie als uitgevoerd
+  } else if (button1State && !button2State && !actionTaken) {
+    Serial.println("Knop 1 ingedrukt: 3s omhoog en omlaag.");
+    servoMotion(3000, 0, 3000, button1Pin);   // Alleen knop 1 ingedrukt: 3s omhoog en omlaag
+    actionTaken = true; // Markeer de actie als uitgevoerd
+  } else if (button2State && !button1State && !actionTaken) {
+    Serial.println("Knop 2 ingedrukt: 0.5s omhoog en omlaag.");
+    servoMotion(500, 0, 500, button2Pin);     // Alleen knop 2 ingedrukt: 0.5s omhoog en omlaag
+    actionTaken = true; // Markeer de actie als uitgevoerd
+  }
+
+  // Reset de actionTaken vlag wanneer beide knoppen worden losgelaten
+  if (!button1State && !button2State) {
+    actionTaken = false;
+  }
+}
+
+/**
+ * @brief Functie om de drukknoppen te debouncen
+ */
+void debounceButtons() {
   // Lees de status van de drukknoppen
   bool reading1 = digitalRead(button1Pin);
   bool reading2 = digitalRead(button2Pin);
@@ -65,29 +93,9 @@ void loop() {
     }
   }
 
-  // Controleer de status van de knoppen en roep servoMotion aan
-  if (button1State && button2State && !actionTaken) {
-    Serial.println("Beide knoppen ingedrukt: 3s omhoog, 5s wachten, 0.5s omlaag.");
-    servoMotion(3000, 5000, 500, button1Pin, button2Pin); // Beide knoppen ingedrukt: 3s omhoog, 5s wachten, 0.5s omlaag
-    actionTaken = true; // Markeer de actie als uitgevoerd
-  } else if (button1State && !button2State && !actionTaken) {
-    Serial.println("Knop 1 ingedrukt: 3s omhoog en omlaag.");
-    servoMotion(3000, 0, 3000, button1Pin);   // Alleen knop 1 ingedrukt: 3s omhoog en omlaag
-    actionTaken = true; // Markeer de actie als uitgevoerd
-  } else if (button2State && !button1State && !actionTaken) {
-    Serial.println("Knop 2 ingedrukt: 0.5s omhoog en omlaag.");
-    servoMotion(500, 0, 500, button2Pin);     // Alleen knop 2 ingedrukt: 0.5s omhoog en omlaag
-    actionTaken = true; // Markeer de actie als uitgevoerd
-  }
-
   // Update vorige knopstatussen
   lastButton1State = reading1;
   lastButton2State = reading2;
-
-  // Reset de actionTaken vlag wanneer beide knoppen worden losgelaten
-  if (!button1State && !button2State) {
-    actionTaken = false;
-  }
 }
 
 /**

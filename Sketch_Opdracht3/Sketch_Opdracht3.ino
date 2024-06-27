@@ -19,21 +19,25 @@ void setup() {
 }
 
 void loop() {
-  // Lees de status van de drukknop
+  leesButtonStatus();
+  wisselLEDs();
+}
+
+void leesButtonStatus() {
   buttonStatus = digitalRead(buttonPin); 
 
   // Controleer of de drukknop is ingedrukt
   if (buttonStatus == HIGH) { // HIGH betekent dat de knop is ingedrukt
     counter++;  // Verhoog de teller
     delay(50);  // Korte pauze om debounce van de drukknop te voorkomen
-
     // Wacht totdat de drukknop wordt losgelaten
     while (digitalRead(buttonPin) == HIGH) {
-      delay(10);  // Korte pauze om de lus te vertragen
+        delay(10);  // Korte pauze om de lus te vertragen
     }
   }
+}
 
-  // Wissel de LEDs afhankelijk van de tellerstand
+void wisselLEDs() {
   if (counter % 2 == 0) {
     digitalWrite(ledPin1, LOW);  // Zet LED 1 uit
     digitalWrite(ledPin2, HIGH); // Zet LED 2 aan

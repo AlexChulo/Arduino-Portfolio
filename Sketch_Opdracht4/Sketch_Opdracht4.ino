@@ -3,29 +3,38 @@
 // - https://brightspace.avans.nl/
 // - 4# How to Code Potentiometers (Complete Guide) - MIDI Programming for the Arduino (youtube.com)
 
-int ledPins[] = {11, 10, 9, 6, 5, 3}; // Array voor pinnnen LED's
+const int ledPins[] = {11, 10, 9, 6, 5, 3}; // Array voor pinnnen LED's
+const int potPin = A0; // Gebruikte pin voor potentiometer
+const int numLeds = sizeof(ledPins) / sizeof(ledPins[0]); // Berekent het aantal LED's in de array
+
 int potState = 0; // Variabele voor de staat van de potentiometer
-int potPin = A0; // Gebruikte pin voor potentiometer
-int numLeds = sizeof(ledPins) / sizeof(ledPins[0]); // Berekent het aantal LED's in de array
 int activeLeds = 0; // Variabele voor het aantal actieve LED's
 
 void setup() {
-  // Voor elke pin in de array, zet als output
+  setupLeds();
+}
+
+void loop() {
+  leesPotentiometer();
+  updateLeds();
+}
+
+// Zet de LED-pinnen als output
+void setupLeds() {
   for (int i = 0; i < numLeds; i++) {
     pinMode(ledPins[i], OUTPUT); // Zet de huidige pin als output
   }
 }
 
-void loop() {
+// Lees de waarde van de potentiometer en update het aantal actieve LED's
+void leesPotentiometer() {
   potState = analogRead(potPin); // Lees de waarde van de potentiometer
-  // Mapping van potentiometerwaarde naar aantal actieve LED's
-  // Wanneer potState 0 is, zijn alle LEDs aan
-  // Wanneer potState 1023 is, zijn alle LEDs uit
-  activeLeds = map(potState, 0, 1023, numLeds, 0); 
+  activeLeds = map(potState, 0, 1023, numLeds, 0); // Mapping van potentiometerwaarde naar aantal actieve LED's
+}
 
-  // Voor elke LED in de array
+// Update de status van de LEDs op basis van de potentiometerwaarde
+void updateLeds() {
   for (int i = 0; i < numLeds; i++) {
-    // Als de huidige index kleiner is dan het aantal actieve LED's
     if (i < activeLeds) {
       digitalWrite(ledPins[i], HIGH); // Zet de LED aan
     } else {
